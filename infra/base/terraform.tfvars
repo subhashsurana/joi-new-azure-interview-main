@@ -5,7 +5,6 @@
 # backend_key                  = "base/terraform.tfstate"
 
 # Provider Configuration (from provider.tf)
-subscription_id         = "2213e8b1-dbc7-4d54-8aff-b5e315df5e5b"
 resource_group_name     = "news362151_rg_joi_interview"
 
 # General Variables (from variables.tf)
