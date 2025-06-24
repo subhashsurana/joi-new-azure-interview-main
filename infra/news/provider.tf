@@ -4,15 +4,15 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = ">=2.99"
+      version = "3.0.0"  # Consistent version across all subdirectories; consider centralizing in a shared module
     }
   }
 
   backend "azurerm" {
-    resource_group_name  = "news4321_rg_joi_interview"
-    storage_account_name = "news4321sajoiinterview"
-    container_name       = "news4321terraformcontainerjoiinterview"
-    key                  = "news/terraform.tfstate"
+    resource_group_name  = var.backend_resource_group_name
+    storage_account_name = var.backend_storage_account_name
+    container_name       = var.backend_container_name
+    key                  = var.backend_key
   }
 }
 
@@ -22,6 +22,5 @@ provider "azurerm" {
 }
 
 data "azurerm_resource_group" "azure-resource" {
-  name = "news4321_rg_joi_interview"
+  name = var.resource_group_name
 }
-

@@ -81,7 +81,7 @@ deploy_site:
 	az storage blob upload-batch --destination news$(PREFIX)psc --account-name news$(PREFIX)psa --source build	
 
 deploy_interview:
-	$(MAKE) az_login
+#	$(MAKE) az_login
 	$(MAKE) az_account
 	$(MAKE) clean	
 	$(MAKE) backend-support.infra
