@@ -1,8 +1,8 @@
 # Backend Configuration (from provider.tf)
-backend_resource_group_name  = "news362151_rg_joi_interview"
-backend_storage_account_name = "news362151sajoiinterview"
-backend_container_name       = "news362151terraformcontainerjoiinterview"
-backend_key                  = "news/terraform.tfstate"
+# backend_resource_group_name  = "news362151_rg_joi_interview"
+# backend_storage_account_name = "news362151sajoiinterview"
+# backend_container_name       = "news362151terraformcontainerjoiinterview"
+# backend_key                  = "news/terraform.tfstate"
 
 # Resource Group Configuration (from provider.tf)
 resource_group_name     = "news362151_rg_joi_interview"

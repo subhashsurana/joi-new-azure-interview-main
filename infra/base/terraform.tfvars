@@ -1,11 +1,11 @@
 # Backend Configuration (from provider.tf)
-backend_resource_group_name  = "news362151_rg_joi_interview"
-backend_storage_account_name = "news362151sajoiinterview"
-backend_container_name       = "news362151terraformcontainerjoiinterview"
-backend_key                  = "base/terraform.tfstate"
+# backend_resource_group_name  = "news362151_rg_joi_interview"
+# backend_storage_account_name = "news362151sajoiinterview"
+# backend_container_name       = "news362151terraformcontainerjoiinterview"
+# backend_key                  = "base/terraform.tfstate"
 
 # Provider Configuration (from provider.tf)
-subscription_id         = "57f3c35c-a3a0-4c9d-b72f-84db5a825d73"
+subscription_id         = "2213e8b1-dbc7-4d54-8aff-b5e315df5e5b"
 resource_group_name     = "news362151_rg_joi_interview"
 
 # General Variables (from variables.tf)

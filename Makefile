@@ -60,7 +60,7 @@ docker: $(DOCKER_TARGETS)
 push: $(DOCKER_PUSH_TARGETS)
 
 $(SSH_KEY):
-	ssh-keygen -q -N "" -f $(SSH_KEY)
+	ssh-keygen -q -N "" -t rsa -b 4096 -f $(SSH_KEY)
 	chmod -c 0600 $(SSH_KEY)
 
 ssh_key: $(SSH_KEY)
@@ -81,7 +81,7 @@ deploy_site:
 	az storage blob upload-batch --destination news$(PREFIX)psc --account-name news$(PREFIX)psa --source build	
 
 deploy_interview:
-#	$(MAKE) az_login
+	$(MAKE) az_login
 	$(MAKE) az_account
 	$(MAKE) clean	
 	$(MAKE) backend-support.infra

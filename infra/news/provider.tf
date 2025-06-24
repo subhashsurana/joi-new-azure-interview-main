@@ -21,6 +21,3 @@ provider "azurerm" {
   features {}
 }
 
-data "azurerm_resource_group" "azure-resource" {
-  name = var.resource_group_name
-}

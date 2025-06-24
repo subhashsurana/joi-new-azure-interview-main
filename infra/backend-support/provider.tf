@@ -11,9 +11,9 @@ terraform {
     container_name       = "news362151terraformcontainerjoiinterview"
     key                  = "terraform.tfstate"
   }
-  # Note: This provider.tf might be unnecessary if backend-support is a one-time setup; consider removing if not managing distinct state
 }
 
 provider "azurerm" {
   features {}
+  subscription_id = "2213e8b1-dbc7-4d54-8aff-b5e315df5e5b"
 }

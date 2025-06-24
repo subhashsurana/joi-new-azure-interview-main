@@ -1,20 +1,20 @@
 resource "azurerm_virtual_network" "virtual-network" {
   name                = var.virtual_network_name
-  resource_group_name = data.azurerm_resource_group.azure-resource.name
+  resource_group_name = var.resource_group_name
   location            = var.location
   address_space       = var.virtual_network_address_space
 }
 
 resource "azurerm_subnet" "public_subnet_a" {
   name                 = var.subnet_a_name
-  resource_group_name  = data.azurerm_resource_group.azure-resource.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.virtual-network.name
   address_prefixes     = var.subnet_a_address_prefixes
 }
 
 resource "azurerm_subnet" "public_subnet_b" {
   name                 = var.subnet_b_name
-  resource_group_name  = data.azurerm_resource_group.azure-resource.name
+  resource_group_name  = var.resource_group_name
   virtual_network_name = azurerm_virtual_network.virtual-network.name
   address_prefixes     = var.subnet_b_address_prefixes
 }
@@ -60,9 +60,9 @@ locals {
 resource "azurerm_public_ip" "public-ip" {
   for_each            = local.services
   name                = "public-ip-${each.key}"
-  resource_group_name = data.azurerm_resource_group.azure-resource.name
+  resource_group_name = var.resource_group_name
   location            = azurerm_virtual_network.virtual-network.location
-  allocation_method   = "Dynamic"
+  allocation_method   = "Static"
   sku                 = each.value.public_ip_sku
 }
 
@@ -96,7 +96,7 @@ resource "azurerm_network_security_group" "security-group" {
   for_each            = local.services
   name                = "security-group-${each.key}"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.azure-resource.name
+  resource_group_name = var.resource_group_name
 }
 
 resource "azurerm_network_security_rule" "rule" {
@@ -110,7 +110,7 @@ resource "azurerm_network_security_rule" "rule" {
   destination_port_range      = each.value.port_range
   source_address_prefix       = "*"
   destination_address_prefix  = each.value.dest_prefix
-  resource_group_name         = data.azurerm_resource_group.azure-resource.name
+  resource_group_name         = var.resource_group_name
   network_security_group_name = azurerm_network_security_group.security-group[each.value.service].name
 }
 
@@ -118,7 +118,7 @@ resource "azurerm_network_interface" "network-interface" {
   for_each            = local.services
   name                = "network-interface-${each.key}"
   location            = var.location
-  resource_group_name = data.azurerm_resource_group.azure-resource.name
+  resource_group_name = var.resource_group_name
 
   ip_configuration {
     name                          = "internal"

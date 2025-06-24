@@ -1,33 +1,16 @@
 variable "prefix" {
   default = "news362151"
+  type    = string
 }
 
 variable "location" {
   default = "East US"
+  type    = string
 }
 
 variable "acr_url_default" {
   default = ".azurecr.io"
-}
-
-variable "backend_resource_group_name" {
-  description = "Resource group name for Terraform backend"
-  type        = string
-}
-
-variable "backend_storage_account_name" {
-  description = "Storage account name for Terraform backend"
-  type        = string
-}
-
-variable "backend_container_name" {
-  description = "Container name for Terraform backend"
-  type        = string
-}
-
-variable "backend_key" {
-  description = "Key for Terraform state file in backend"
-  type        = string
+  type    = string
 }
 
 variable "resource_group_name" {
