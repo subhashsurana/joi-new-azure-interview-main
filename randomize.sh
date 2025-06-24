@@ -12,11 +12,8 @@ function randomize {
   else    
     >&2 echo "Randomizing the code base..."
     if [ -z "$CODE_PREFIX" ]; then
-      echo "Enter CODE_PREFIX (candidate's lastname): " CODE_PREFIX
-    fi
-    if [ -z "$CODE_PREFIX" ]; then
-      >&2 echo "ERROR: CODE_PREFIX is required. Exiting."
-      exit 1
+      echo "Enter CODE_PREFIX (candidate's lastname): " 
+      CODE_PREFIX='362151'
     fi
     echo "${CODE_PREFIX}" | awk '{print tolower($0)}' > interview_id.txt
     INTERVIEW_CODE=$(cat interview_id.txt)
