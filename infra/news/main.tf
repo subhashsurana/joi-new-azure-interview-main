@@ -1,45 +1,48 @@
-data "azurerm_user_assigned_identity" "identity-acr" {
-  resource_group_name = var.resource_group_name
-  name                = var.identity_acr_name
-}
+# Data sources and locals moved to container_apps.tf for container app setup
+# data "azurerm_user_assigned_identity" "identity-acr" {
+#   resource_group_name = var.resource_group_name
+#   name                = var.identity_acr_name
+# }
 
-data "azurerm_storage_account" "public-storage-account" {
-  name                = "${var.prefix}${var.storage_account_name_suffix}"
-  resource_group_name = var.resource_group_name
-}
+# data "azurerm_storage_account" "public-storage-account" {
+#   name                = "${var.prefix}${var.storage_account_name_suffix}"
+#   resource_group_name = var.resource_group_name
+# }
 
-data "azurerm_storage_container" "public-storage-container" {
-  name                 = "${var.prefix}${var.storage_container_name_suffix}"
-  storage_account_name = data.azurerm_storage_account.public-storage-account.name
-}
+# data "azurerm_storage_container" "public-storage-container" {
+#   name                 = "${var.prefix}${var.storage_container_name_suffix}"
+#   storage_account_name = data.azurerm_storage_account.public-storage-account.name
+# }
 
-data "azurerm_network_interface" "network-interface" {
-  for_each            = local.services
-  name                = each.value.network_interface_name
-  resource_group_name = var.resource_group_name
-}
+# data "azurerm_network_interface" "network-interface" {
+#   for_each            = local.services
+#   name                = each.value.network_interface_name
+#   resource_group_name = var.resource_group_name
+# }
 
-locals {
-  url_static_blob = "https://${data.azurerm_storage_account.public-storage-account.name}.blob.core.windows.net/${data.azurerm_storage_container.public-storage-container.name}"
-  services = {
-    quotes = {
-      name                 = var.vm_quotes_name
-      network_interface_name = var.network_interface_quotes_name
-      provision_script     = "provision-quotes.sh"
-    },
-    newsfeed = {
-      name                 = var.vm_newsfeed_name
-      network_interface_name = var.network_interface_newsfeed_name
-      provision_script     = "provision-newsfeed.sh"
-    },
-    frontend = {
-      name                 = var.vm_frontend_name
-      network_interface_name = var.network_interface_frontend_name
-      provision_script     = "provision-frontend.sh"
-    }
-  }
-}
+# locals {
+#   url_static_blob = "https://${data.azurerm_storage_account.public-storage-account.name}.blob.core.windows.net/${data.azurerm_storage_container.public-storage-container.name}"
+#   services = {
+#     quotes = {
+#       name                 = var.vm_quotes_name
+#       network_interface_name = var.network_interface_quotes_name
+#       provision_script     = "provision-quotes.sh"
+#     },
+#     newsfeed = {
+#       name                 = var.vm_newsfeed_name
+#       network_interface_name = var.network_interface_newsfeed_name
+#       provision_script     = "provision-newsfeed.sh"
+#     },
+#     frontend = {
+#       name                 = var.vm_frontend_name
+#       network_interface_name = var.network_interface_frontend_name
+#       provision_script     = "provision-frontend.sh"
+#     }
+#   }
+# }
 
+/*
+# Commented out Virtual Machine setup for Quotes - switched to Container Apps
 resource "azurerm_linux_virtual_machine" "virtual-machine-quotes" {
   name                = var.vm_quotes_name
   resource_group_name = var.resource_group_name
@@ -105,7 +108,10 @@ resource "azurerm_linux_virtual_machine" "virtual-machine-quotes" {
     ]
   }
 }
+*/
 
+/*
+# Commented out Virtual Machine setup for Newsfeed - switched to Container Apps
 resource "azurerm_linux_virtual_machine" "virtual-machine-newsfeed" {
   name                = var.vm_newsfeed_name
   resource_group_name = var.resource_group_name
@@ -171,7 +177,10 @@ resource "azurerm_linux_virtual_machine" "virtual-machine-newsfeed" {
     ]
   }
 }
+*/
 
+/*
+# Commented out Virtual Machine setup for Frontend - switched to Container Apps
 resource "azurerm_linux_virtual_machine" "virtual-machine-frontend" {
   name                = var.vm_frontend_name
   resource_group_name = var.resource_group_name
@@ -242,7 +251,11 @@ resource "azurerm_linux_virtual_machine" "virtual-machine-frontend" {
     azurerm_linux_virtual_machine.virtual-machine-newsfeed
   ]
 }
+*/
 
+/*
+# Commented out output for VM-based frontend URL - switched to Container Apps
 output "frontend_url" {
   value = "http://${azurerm_linux_virtual_machine.virtual-machine-frontend.public_ip_address}:8080"
 }
+*/

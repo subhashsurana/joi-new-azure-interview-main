@@ -1,3 +1,5 @@
+/*
+# Commented out resources not required for Azure Container Apps setup
 resource "azurerm_virtual_network" "virtual-network" {
   name                = var.virtual_network_name
   resource_group_name = var.resource_group_name
@@ -133,3 +135,4 @@ resource "azurerm_network_interface_security_group_association" "association-ni-
   network_interface_id      = azurerm_network_interface.network-interface[each.key].id
   network_security_group_id = azurerm_network_security_group.security-group[each.key].id
 }
+*/

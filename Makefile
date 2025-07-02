@@ -65,8 +65,29 @@ $(SSH_KEY):
 
 ssh_key: $(SSH_KEY)
 
+deploy-news:
+	@if [ -z "$$TF_VAR_newsfeed_service_token" ]; then \
+		echo "Error: TF_VAR_newsfeed_service_token is not set"; \
+		echo "Please set it with: export export TF_VAR_newsfeed_service_token=<your-token>"; \
+		exit 1; \
+	fi
+	@echo "Token is set, proceeding with deployment"
+
 %.infra: ssh_key
-	cd infra/$* && rm -rf .terraform && terraform init && terraform apply -auto-approve
+	if [ "$*" = "news" ]; then \
+		echo "Applying Terraform for 'news' with newsfeed_service_token environment variable"; \
+		if [ -z "$$TF_VAR_newsfeed_service_token" ]; then \
+			echo "Error: TF_VAR_newsfeed_service_token must be set before running 'make news.infra'."; \
+			echo "Please set it with: export TF_VAR_newsfeed_service_token=<your-token>"; \
+			exit 1; \
+		fi; \
+		cd infra/$* && rm -rf .terraform && terraform init && terraform apply -auto-approve; \
+	else \
+		echo "Applying Terraform for '$*' without additional environment variables"; \
+		cd infra/$* && rm -rf .terraform && terraform init && terraform apply -auto-approve; \
+	fi
+# Note: Set the NEWSFEED_SERVICE_TOKEN environment variable before running 'make news.infra' if needed:
+# export NEWSFEED_SERVICE_TOKEN=<your-token>; make news.infra
 
 %.deinfra: ssh_key
 	cd infra/$* && terraform init && terraform destroy -auto-approve
@@ -78,8 +99,7 @@ deploy_site:
 	tar xf ../static.tgz &&\
 	rm ../static.tgz &&\
 	cd ../../
-	az storage blob upload-batch --destination news$(PREFIX)psc --account-name news$(PREFIX)psa --source build	
-
+	az storage blob upload-batch --destination news$(PREFIX)psc --account-name news$(PREFIX)psa --source build --overwrite 
 deploy_interview:
 #	$(MAKE) az_login
 	$(MAKE) az_account
@@ -89,7 +109,8 @@ deploy_interview:
 	$(MAKE) docker
 	$(MAKE) push
 	$(MAKE) static
-	$(MAKE) deploy_site	
+	$(MAKE) deploy_site
+	$(MAKE) deploy-news	
 	$(MAKE) news.infra	
 
 destroy_interview:

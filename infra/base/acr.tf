@@ -20,27 +20,11 @@ resource "azurerm_container_registry" "registry" {
   location            = var.location
   sku                 = var.acr_sku
   admin_enabled       = var.acr_admin_enabled
-  
-}
-
-resource "azurerm_management_lock" "acr_mgmt_lock" {
-  name               = "acr-mgmt-lock"
-  resource_group_name = var.azurerm_resource_group_name
-  resource_type      = "Microsoft.ContainerRegistry/registries"
-  resource_name      = azurerm_container_registry.registry[each.key].name
-  resource_id        = azurerm_container_registry.registry[each.key].id
-  lock_level         = "CanNotDelete"  # or "ReadOnly"
-  depends_on = [azurerm_container_registry.registry]
-}
-
-
-resource "random_uuid" "acrpull_id" {
-  for_each = local.registry_services
-  keepers = {
-    acr_id = azurerm_container_registry.registry[each.key].id
-    sp_id  = azurerm_user_assigned_identity.identity-acr.principal_id
-    role   = "AcrPull"
+  identity {
+    type         = "UserAssigned"
+    identity_ids = [azurerm_user_assigned_identity.identity-acr.id]
   }
+  depends_on = [azurerm_user_assigned_identity.identity-acr]  
 }
 
 data "azurerm_role_definition" "acrpull" {
@@ -49,9 +33,8 @@ data "azurerm_role_definition" "acrpull" {
 
 resource "azurerm_role_assignment" "acr_acrpull" {
   for_each           = local.registry_services
-  name               = random_uuid.acrpull_id[each.key].result
   scope              = azurerm_container_registry.registry[each.key].id
-  role_definition_id = data.azurerm_role_definition.acrpull.id
+  role_definition_name = data.azurerm_role_definition.acrpull.name
   principal_id       = azurerm_user_assigned_identity.identity-acr.principal_id
 }
 

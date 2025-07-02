@@ -4,7 +4,7 @@ terraform {
   required_providers {
     azurerm = {
       source  = "hashicorp/azurerm"
-      version = "3.0.0"  # Consistent version across all subdirectories; consider centralizing in a shared module
+      version = ">=3.50.0"  # Updated to support Azure Container Apps resources
     }
   }
 
@@ -15,9 +15,8 @@ terraform {
     key                  = "news/terraform.tfstate"
   }
 }
-
 # Configure the Microsoft Azure Provider
 provider "azurerm" {
   features {}
+  # Subscription ID is provided via ARM_SUBSCRIPTION_ID environment variable
 }
-
