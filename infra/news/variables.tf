@@ -111,10 +111,6 @@ variable "connection_agent" {
 #   type        = string
 # }
 
-variable "identity_acr_name" {
-  description = "Name of the user-assigned identity for ACR"
-  type        = string
-}
 
 variable "storage_account_name_suffix" {
   description = "Suffix for storage account name"
@@ -126,30 +122,35 @@ variable "storage_container_name_suffix" {
   type        = string
 }
 
-variable "provision_docker_script_path" {
-  description = "Path to the Docker provisioning script"
-  type        = string
-}
+# variable "provision_docker_script_path" {
+#   description = "Path to the Docker provisioning script"
+#   type        = string
+# }
 
-variable "provision_quotes_script_path" {
-  description = "Path to the Quotes provisioning script"
-  type        = string
-}
+# variable "provision_quotes_script_path" {
+#   description = "Path to the Quotes provisioning script"
+#   type        = string
+# }
 
-variable "provision_newsfeed_script_path" {
-  description = "Path to the Newsfeed provisioning script"
-  type        = string
-}
+# variable "provision_newsfeed_script_path" {
+#   description = "Path to the Newsfeed provisioning script"
+#   type        = string
+# }
 
-variable "provision_frontend_script_path" {
-  description = "Path to the Frontend provisioning script"
-  type        = string
-}
+# variable "provision_frontend_script_path" {
+#   description = "Path to the Frontend provisioning script"
+#   type        = string
+# }
 
 # variable "tenant_id" {
 #   description = "Azure Tenant ID for Key Vault configuration"
 #   type        = string
 # }
+
+variable "identity_acr_name" {
+  description = "Name of the user-assigned identity for ACR"
+  type        = string
+}
 
 variable "newsfeed_service_token" {
   description = "Secret token for Newsfeed service authentication, stored in Key Vault"

@@ -163,18 +163,43 @@ resource "azurerm_container_app" "services" {
       cpu    = each.value.cpu
       memory = each.value.memory
 
+      # READINESS PROBE:
+      # Ensures the container is ready to handle traffic before routing requests to it.
+      # The /ping endpoint is perfect for this.
+      readiness_probe {
+        transport                 = "HTTP"
+        path                    = "/ping"
+        port                    = each.value.target_port
+        initial_delay           = 10 # Wait 10s before first probe
+        interval_seconds          = 10 # Check every 10s
+        failure_count_threshold   = 3 # Fail after 3 consecutive failures
+        success_count_threshold = 3 # Success after 3 successful probes
+      }
+
+      # LIVENESS PROBE:
+      # Checks if the container is still running and responsive.
+      # If this probe fails, the container will be restarted.
+      liveness_probe {
+        transport                 = "HTTP"
+        path                    = "/ping"
+        port                    = each.value.target_port
+        initial_delay   = 10 # Wait 10s before first probe
+        interval_seconds          = 10 # Check every 10s
+        failure_count_threshold   = 3 # Fail after 3 consecutive failures
+      }
+
       dynamic "env" {
         for_each = each.key == "frontend" ? [1] : []
         content {
           name  = "QUOTE_SERVICE_URL"
-          value = format("http://%s:%s", local.container_services["quotes"].name, local.container_services["quotes"].target_port)
+          value = format("http://%s", local.container_services["quotes"].name)
         }
       }
       dynamic "env" {
         for_each = each.key == "frontend" ? [1] : []
         content {
           name  = "NEWSFEED_SERVICE_URL"
-          value = format("http://%s:%s", local.container_services["newsfeed"].name, local.container_services["newsfeed"].target_port)
+          value = format("http://%s", local.container_services["newsfeed"].name)
         }
       }
       dynamic "env" {
@@ -184,16 +209,23 @@ resource "azurerm_container_app" "services" {
           value = local.url_static_blob
         }
       }
-  dynamic "env" {
-    for_each = each.key == "frontend" || each.key == "newsfeed" ? [1] : []
-    content {
-      name        = "NEWSFEED_SERVICE_TOKEN"
-      secret_name = azurerm_key_vault_secret.newsfeed_token.name
-    }
-  }
-    }
+      dynamic "env" {
+        for_each = each.key == "frontend" || each.key == "newsfeed" ? [1] : []
+        content {
+          name        = "NEWSFEED_SERVICE_TOKEN"
+          secret_name = azurerm_key_vault_secret.newsfeed_token.name
+        }
+      }
+      }
     min_replicas = each.value.min_replicas
     max_replicas = each.value.max_replicas
+    # AUTO-SCALING CONFIGURATION:
+    # This rule will add a new replica when the average number of concurrent HTTP requests over the last 60 seconds is 25 or more.
+    http_scale_rule {
+        name = "http-scaling-rule"
+      
+      concurrent_requests = 25
+    }
   }
 
   dynamic "secret" {

@@ -47,10 +47,10 @@ storage_account_name_suffix = "psa"
 storage_container_name_suffix = "psc"
 
 # Provisioning Script Paths
-provision_docker_script_path = "./provision-docker.sh"
-provision_quotes_script_path = "./provision-quotes.sh"
-provision_newsfeed_script_path = "./provision-newsfeed.sh"
-provision_frontend_script_path = "./provision-frontend.sh"
+# provision_docker_script_path = "./provision-docker.sh"
+# provision_quotes_script_path = "./provision-quotes.sh"
+# provision_newsfeed_script_path = "./provision-newsfeed.sh"
+# provision_frontend_script_path = "./provision-frontend.sh"
 
 # Key Vault Configuration (for Container Apps)
 # tenant_id is now dynamically fetched from the current Azure subscription using a data source in Terraform.
